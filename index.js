@@ -1,7 +1,7 @@
 const http = require('http');
 
 const server = http.createServer((req, res) => {
-  res.end('Hello sz from Node.js app github action!');
+  res.end('Hello sz again from Node.js app github action!');
 });
 
 server.listen(3000, () => {

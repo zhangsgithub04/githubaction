@@ -1,32 +1,25 @@
-name: Build and Push Docker Image with Version Tag
+name: Build and Push Docker Image
 
 on:
   push:
-    tags:
-      - 'v*'  # triggers on tags like v1.0.0
+    branches: [main]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout code
+    - name: 🧾 Checkout code
       uses: actions/checkout@v3
 
     - name: 🔐 Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: 🏗️ Extract tag name
-      id: extract_tag
-      run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
-    - name: 🏗️ Build Docker image with version tag
+    - name: 🏗️ Build Docker image
       run: |
-        docker build -t zhangsgm/githubaction1:${{ env.TAG }} .
-        docker tag zhangsgm/githubaction1:${{ env.TAG }} zhangsgm/githubaction1:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest .
 
-    - name: 🚀 Push versioned and latest tags
+    - name: 🚀 Push to Docker Hub
       run: |
-        docker push zhangsgm/githubaction1:${{ env.TAG }}
-        docker push zhangsgm/githubaction1:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
 
